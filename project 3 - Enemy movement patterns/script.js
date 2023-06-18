@@ -4,28 +4,63 @@ const ctx = canvas.getContext('2d');
 const CANVAS_WIDTH = canvas.width = 500;
 const CANVAS_HEIGTH = canvas.height = 1000;
 const numberOfEnemies = 10;
-const enemiesArray = [];
+const enemiesArray1 = [];
 
-let gameFrame = 0
+let gameFrame = 0;
+
+const enemyTypes = [
+    {
+        name: 'Richard',
+        spriteWidth: 293,
+        spriteHeigth: 155,
+        imageSource: 'enemy1.png',
+    },
+    {
+        name: 'Godfrey',
+        spriteWidth: 266,
+        spriteHeigth: 188,
+        imageSource: 'enemy2.png',
+    },
+    {
+        name: 'Dimitri',
+        spriteWidth: 218,
+        spriteHeigth: 177,
+        imageSource: 'enemy3.png',
+    },
+    {
+        name: 'Boca',
+        spriteWidth: 213,
+        spriteHeigth: 212,
+        imageSource: 'enemy4.png',
+    }
+];
 
 class Enemy {
-    constructor(){
+    constructor(imgSrc, sWidth, sHeigth){
         this.image = new Image();
-        this.image.src = 'enemy1.png';
-        //this.speed = Math.random() * 4 - 2;
-        this.spriteWidth = 293;
-        this.spriteHeight = 155;
+        this.image.src = imgSrc;
+
+        this.spriteWidth = sWidth;
+        this.spriteHeight = sHeigth;
+
+        // refactor this to size
         this.width = this.spriteWidth / 2.5;
         this.height = this.spriteHeight / 2.5;
+
+        this.speed = Math.random() * 4 - 2;
+
         this.x = Math.random() * (canvas.width - this.width);
         this.y = Math.random() * (canvas.height - this.height);
         this.frame = 0;
+
         this.flapSpeed = Math.floor(Math.random()* 3 + 1);
     }
     update() {
+        //refactorthis
         this.x += Math.random() * 5 - 2.5;
         this.y += Math.random() * 5 - 2.5;
-        // animate sprite
+
+        // animate sprite => refactor to staggerFrames
         if(gameFrame % this.flapSpeed === 0) {
             this.frame > 4 ? this.frame = 0 : this.frame++; 
         }
@@ -35,13 +70,16 @@ class Enemy {
     }
 };
 
-for (let i = 0; i < numberOfEnemies; i++) {
-    enemiesArray.push(new Enemy());
-}
+enemyTypes.forEach((enemy) => {
+    for (let i = 0; i < numberOfEnemies; i++) {
+        enemiesArray1.push(new Enemy(enemy.imageSource, enemy.spriteWidth, enemy.spriteHeigth));
+    }
+});
+
 
 function animate() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGTH);
-    enemiesArray.forEach(enemy => {
+    enemiesArray1.forEach(enemy => {
         enemy.update();
         enemy.draw();
     });
@@ -50,7 +88,6 @@ function animate() {
 }
 animate();
 
-//enemy1 w=293 h=155
-//enemy2 w=266 h=188
-//enemy3 w=218 h=177
-//enemy4 w=319 h=212
+// New canvas for each enemyType
+// Different animation for each enemyType
+// Organize & Refactor

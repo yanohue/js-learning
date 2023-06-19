@@ -8,11 +8,14 @@ const enemiesArray1 = [];
 
 let gameFrame = 0;
 
+// refactor idea: each type extends the enemy class
 const enemyTypes = [
     {
         name: 'Richard',
         spriteWidth: 293,
         spriteHeigth: 155,
+        size: 2.5,
+        speed: 1,
         imageSource: 'enemy1.png',
     },
     {
@@ -30,7 +33,7 @@ const enemyTypes = [
     {
         name: 'Boca',
         spriteWidth: 213,
-        spriteHeigth: 212,
+        spriteHeigth: 213,
         imageSource: 'enemy4.png',
     }
 ];

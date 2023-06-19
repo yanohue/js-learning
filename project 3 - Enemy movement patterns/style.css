@@ -3,7 +3,6 @@ body {
     justify-content: space-evenly;
 }
 .canvas {
-    margin-top: 25%;
     border: 3px solid black;
     height: 1000px;
     width: 500px;

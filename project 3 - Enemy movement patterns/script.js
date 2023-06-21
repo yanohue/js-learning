@@ -12,7 +12,7 @@ const ctx4 = canvas4.getContext('2d');
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGTH = 1000;
 
-const numberOfEnemies = 10;
+const numberOfEnemies = 25;
 
 const enemiesArray1 = [];
 const enemiesArray2 = [];
@@ -112,8 +112,8 @@ class Path_ghost extends Enemy {
         this.angleIncrement = Math.random() * 2 + 0.5;
     }
     update() {
-        this.x = CANVAS_WIDTH / 2 * Math.sin(this.angle * Math.PI / 90) + (CANVAS_WIDTH / 2 - this.width / 2);
-        this.y = CANVAS_HEIGTH / 2 * Math.cos(this.angle * Math.PI / 180) + (CANVAS_HEIGTH / 2 - this.height / 2);
+        this.x = CANVAS_WIDTH / 2 * Math.sin(this.angle * Math.PI / 180) + (CANVAS_WIDTH / 2 - this.width / 2);
+        this.y = CANVAS_HEIGTH / 2 * Math.cos(this.angle * Math.PI / 720) + (CANVAS_HEIGTH / 2 - this.height / 2);
 
         this.angle += this.angleIncrement;
 
@@ -129,17 +129,22 @@ class Target_saw extends Enemy {
 
         this.targetX = Math.random() * (CANVAS_WIDTH - this.width);
         this.targetY = Math.random() * (CANVAS_HEIGTH - this.height);
-        this.interval = Math.floor(Math.random() * 200 + 50);
+        this.downtime = Math.floor(Math.random() * 200 + 60);
     }
     update() {
-        if(gameFrame % this.interval === 0) {
+        if(gameFrame % this.downtime === 0) {
             this.targetX = Math.random() * (CANVAS_WIDTH - this.width);
             this.targetY = Math.random() * (CANVAS_HEIGTH - this.height); 
         }
-        let dx = this.x - this.targetX;
-        let dy = this.y - this.targetY;
-        this.x -= dx / 50;
-        this.y -= dy / 50;
+        let distanceToX = this.x - this.targetX;
+        let distanceToY = this.y - this.targetY;
+
+        this.x -= distanceToX / 50;
+        this.y -= distanceToY / 50;
+        
+        if(gameFrame % this.staggerFrames === 0) {
+            this.frame > 4 ? this.frame = 0 : this.frame++; 
+        }
     }
 };
 

@@ -12,7 +12,7 @@ const ctx4 = canvas4.getContext('2d');
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGTH = 1000;
 
-const numberOfEnemies = 25;
+const numberOfEnemies = 10;
 
 const enemiesArray1 = [];
 const enemiesArray2 = [];
@@ -39,23 +39,6 @@ const enemyCanvas = [
 ]
 
 let gameFrame = 0; // Organize this line => gameFrame needs a deep look into
-
-// Refactor idea: each type becomes its own class and extends the enemy class.
-
-// The objective: facilitate changes to the movement pattern & more...
-
-// Currently the pattern is defined by the class Enemy update() method,
-// and is dependant of enemyTypes speed atribute, this interactions creates the JITTER movement pattern,
-// Math.random() is used to create some variance between each enemy.
-// The way its done now, its quite hardcoded.
-
-// Thinking about aplying Math.sin() & Math.cos() to create a WAVE pattern movement,
-// for both the x-axis and y-axis.
-
-// Also, another pattern idea is to use Math.random() to generate a COORDINATE and 
-// enemies gradually move towards that location.
-
-// Ideas needs to be developed, tested & validated.
 
 class Enemy {
     constructor(imgSrc, spriteWidth, spriteHeigth, size, speed){
@@ -103,11 +86,12 @@ class Wave_bat extends Enemy {
         super('enemy2.png', 266, 188, 0.5, Math.random() * 4 + 1);
 
         this.angle = Math.random() * 2;
-        this.angleIncrement = Math.random() * 0.2
+        this.angleIncrement = Math.random() * 0.2;
+        this.multiplier = Math.random() * 7;
     }
     update() {
         this.x -= this.speed;
-        this.y += Math.sin(this.angle);
+        this.y += this.multiplier * Math.sin(this.angle);
 
         this.angle += this.angleIncrement;
 
@@ -119,28 +103,51 @@ class Wave_bat extends Enemy {
         }
     }
 };
-class Tiny_ghost extends Enemy {
+
+class Path_ghost extends Enemy {
     constructor() {
         super('enemy3.png', 218, 177, 0.3, Math.random() * 4 + 1);
+
+        this.angle = 0;
+        this.angleIncrement = Math.random() * 2 + 0.5;
     }
     update() {
-        // Develop movement pattern
+        this.x = CANVAS_WIDTH / 2 * Math.sin(this.angle * Math.PI / 90) + (CANVAS_WIDTH / 2 - this.width / 2);
+        this.y = CANVAS_HEIGTH / 2 * Math.cos(this.angle * Math.PI / 180) + (CANVAS_HEIGTH / 2 - this.height / 2);
+
+        this.angle += this.angleIncrement;
+
+        if(gameFrame % this.staggerFrames === 0) {
+            this.frame > 4 ? this.frame = 0 : this.frame++; 
+        }
     }
 };
-class Scary_saw extends Enemy {
+
+class Target_saw extends Enemy {
     constructor() {
         super('enemy4.png', 213, 213, 0.6, Math.random() * 4 + 1);
+
+        this.targetX = Math.random() * (CANVAS_WIDTH - this.width);
+        this.targetY = Math.random() * (CANVAS_HEIGTH - this.height);
+        this.interval = Math.floor(Math.random() * 200 + 50);
     }
     update() {
-        // Develop movement pattern
+        if(gameFrame % this.interval === 0) {
+            this.targetX = Math.random() * (CANVAS_WIDTH - this.width);
+            this.targetY = Math.random() * (CANVAS_HEIGTH - this.height); 
+        }
+        let dx = this.x - this.targetX;
+        let dy = this.y - this.targetY;
+        this.x -= dx / 50;
+        this.y -= dy / 50;
     }
 };
 
 for (let i = 0; i < numberOfEnemies; i++) {
     enemiesArray1.push(new Jitter_bat());
     enemiesArray2.push(new Wave_bat());
-    enemiesArray3.push(new Tiny_ghost());
-    enemiesArray4.push(new Scary_saw());
+    enemiesArray3.push(new Path_ghost());
+    enemiesArray4.push(new Target_saw());
 }
 
 function animate() {
@@ -157,5 +164,4 @@ function animate() {
 animate();
 
 // to-do list
-// Different animation for each enemyType
 // Organize & Refactor

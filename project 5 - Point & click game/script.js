@@ -14,7 +14,7 @@ let score = 0;
 let gameOver = false;
 
 let timeToNextRaven = 0;
-let ravenInterval = 500;
+let ravenInterval = 500; 
 let lastTime = 0; 
 
 let ravens = [];

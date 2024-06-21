@@ -21,6 +21,10 @@ export class CollisionAnimation {
         this.frameInterval = 1000 / this.fps;
         this.frameTimer = 0;
 
+        this.sound = new Audio();
+        this.sound.src = 'assets/boom.wav';
+        this.sound.volume = 0.1;
+
         this.markedForDeletion = false;
     }
 
@@ -32,6 +36,10 @@ export class CollisionAnimation {
 
     update(deltatime) {
         this.x -= this.game.speed;
+
+        if(this.frameX === 0) {
+            this.sound.play();
+        }
 
         if(this.frameTimer > this.frameInterval) {
             this.frameX++;
